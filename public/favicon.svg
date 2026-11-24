@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="obsidianGold" cx="30%" cy="25%" r="80%">
+      <stop offset="0%" stop-color="#2a2110" />
+      <stop offset="55%" stop-color="#0d0c10" />
+      <stop offset="100%" stop-color="#050507" />
+    </radialGradient>
+    <linearGradient id="goldRim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f3d27a" />
+      <stop offset="50%" stop-color="#c99a2e" />
+      <stop offset="100%" stop-color="#6b4f12" />
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#obsidianGold)" stroke="url(#goldRim)" stroke-width="2" />
+  <text
+    x="32"
+    y="45"
+    text-anchor="middle"
+    fill="#ffffff"
+    font-family="'Brush Script MT', 'Segoe Script', 'Apple Chancery', 'Times New Roman', cursive, serif"
+    font-style="italic"
+    font-weight="700"
+    font-size="40"
+  >P</text>
+</svg>
