@@ -6,8 +6,8 @@ export default function Preloader3D({ ready }) {
 
   useEffect(() => {
     if (!ready) return undefined;
-    const t1 = setTimeout(() => setFading(true), 650);
-    const t2 = setTimeout(() => setVisible(false), 1250);
+    const t1 = setTimeout(() => setFading(true), 150);
+    const t2 = setTimeout(() => setVisible(false), 500);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
