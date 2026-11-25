@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import emailjs from '@emailjs/browser';
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   SiExpress,
   SiFramer,
@@ -38,12 +37,13 @@ import {
 } from 'lucide-react';
 
 import AnimatedContent from './components/reactbits/AnimatedContent';
-import DepthCarousel from './components/reactbits/DepthCarousel';
-import FlipCard from './components/reactbits/FlipCard';
 import GooeyNav from './components/reactbits/GooeyNav';
 import SpecularButton from './components/reactbits/SpecularButton';
-import LogoLoop from './components/reactbits/LogoLoop';
-import TargetCursor from './components/reactbits/TargetCursor';
+
+const DepthCarousel = lazy(() => import('./components/reactbits/DepthCarousel'));
+const FlipCard = lazy(() => import('./components/reactbits/FlipCard'));
+const LogoLoop = lazy(() => import('./components/reactbits/LogoLoop'));
+const TargetCursor = lazy(() => import('./components/reactbits/TargetCursor'));
 
 import ScrollBackground from './components/ScrollBackground';
 import Preloader3D from './components/Preloader3D';
@@ -71,7 +71,6 @@ const SECTION_IDS = ['home', 'about', 'skills', 'projects', 'contact'];
 export default function App() {
   const [bgReady, setBgReady] = useState(false);
   const [activeNav, setActiveNav] = useState(0);
-  const [certIndex, setCertIndex] = useState(0);
   const [heroTilt, setHeroTilt] = useState({ rx: 0, ry: 0 });
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -170,6 +169,7 @@ export default function App() {
     setFormError('');
 
     try {
+      const { default: emailjs } = await import('@emailjs/browser');
       await emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
@@ -207,19 +207,21 @@ export default function App() {
       <Preloader3D ready={bgReady} />
 
       {/* Custom Targeted Cursor */}
-      <TargetCursor
-        targetSelector=".cursor-target"
-        cursorColor="#f3d27a"
-        cursorColorOnTarget="#ffffff"
-        spinDuration={2.6}
-        hoverDuration={0.18}
-        parallaxOn
-        hideDefaultCursor
-        blendMode="normal"
-        size={34}
-        cornerSize={11}
-        thickness={2.5}
-      />
+      <Suspense fallback={null}>
+        <TargetCursor
+          targetSelector=".cursor-target"
+          cursorColor="#f3d27a"
+          cursorColorOnTarget="#ffffff"
+          spinDuration={2.6}
+          hoverDuration={0.18}
+          parallaxOn
+          hideDefaultCursor
+          blendMode="normal"
+          size={34}
+          cornerSize={11}
+          thickness={2.5}
+        />
+      </Suspense>
 
       {/* Preserved 239-Frame Scroll-Animated Background */}
       <ScrollBackground onReady={handleBgReady} />
@@ -463,20 +465,22 @@ export default function App() {
 
             <AnimatedContent distance={40} duration={0.85} delay={0.08}>
               <div className="logo-loop-shell glass-card">
-                <LogoLoop
-                  logos={techLogos}
-                  speed={85}
-                  direction="left"
-                  logoHeight={42}
-                  gap={48}
-                  hoverSpeed={0}
-                  scaleOnHover
-                  magnify={0.35}
-                  labels="below"
-                  fadeOut
-                  fadeOutWidth={0.12}
-                  ariaLabel="Technical skills and technologies"
-                />
+                <Suspense fallback={<div style={{ height: 108 }} />}>
+                  <LogoLoop
+                    logos={techLogos}
+                    speed={85}
+                    direction="left"
+                    logoHeight={42}
+                    gap={48}
+                    hoverSpeed={0}
+                    scaleOnHover
+                    magnify={0.35}
+                    labels="below"
+                    fadeOut
+                    fadeOutWidth={0.12}
+                    ariaLabel="Technical skills and technologies"
+                  />
+                </Suspense>
               </div>
             </AnimatedContent>
 
@@ -524,66 +528,68 @@ export default function App() {
                   className="project-column"
                 >
                   <div className="project-flip-wrap cursor-target" data-cursor-label="Click / Drag to Flip">
-                    <FlipCard
-                      width={480}
-                      height={420}
-                      radius={22}
-                      background="#0c0c10"
-                      color="#f5f5f5"
-                      tilt
-                      tiltMax={10}
-                      glare
-                      glareOpacity={0.2}
-                      hoverScale={1.02}
-                      shadowColor="#000000"
-                      shadowOpacity={0.6}
-                      ariaLabel={`${project.title} project card`}
-                      front={
-                        <div className="flip-face-inner flip-face-inner--front">
-                          <div className="project-card__top">
-                            <span className="gold-pill">
-                              <Layers size={13} />
-                              <span>Project 0{idx + 1}</span>
-                            </span>
-                            <span className="flip-hint">
-                              <RotateCw size={13} />
-                              <span>Flip for details</span>
-                            </span>
-                          </div>
-
-                          <div className="project-card__body">
-                            <h3 className="project-card__title">{project.title}</h3>
-                            <p className="project-card__subtitle">{project.subtitle}</p>
-                            <p className="project-card__tagline">{project.tagline}</p>
-                          </div>
-
-                          <div className="tag-wrap">
-                            {project.technologies.map((tech) => (
-                              <span key={tech} className="tech-tag tech-tag--compact">
-                                {tech}
+                    <Suspense fallback={<div style={{ width: '100%', height: 420 }} />}>
+                      <FlipCard
+                        width={480}
+                        height={420}
+                        radius={22}
+                        background="#0c0c10"
+                        color="#f5f5f5"
+                        tilt
+                        tiltMax={10}
+                        glare
+                        glareOpacity={0.2}
+                        hoverScale={1.02}
+                        shadowColor="#000000"
+                        shadowOpacity={0.6}
+                        ariaLabel={`${project.title} project card`}
+                        front={
+                          <div className="flip-face-inner flip-face-inner--front">
+                            <div className="project-card__top">
+                              <span className="gold-pill">
+                                <Layers size={13} />
+                                <span>Project 0{idx + 1}</span>
                               </span>
-                            ))}
+                              <span className="flip-hint">
+                                <RotateCw size={13} />
+                                <span>Flip for details</span>
+                              </span>
+                            </div>
+
+                            <div className="project-card__body">
+                              <h3 className="project-card__title">{project.title}</h3>
+                              <p className="project-card__subtitle">{project.subtitle}</p>
+                              <p className="project-card__tagline">{project.tagline}</p>
+                            </div>
+
+                            <div className="tag-wrap">
+                              {project.technologies.map((tech) => (
+                                <span key={tech} className="tech-tag tech-tag--compact">
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      }
-                      back={
-                        <div className="flip-face-inner flip-face-inner--back">
-                          <div className="project-card__top">
-                            <span className="gold-pill">Highlights</span>
-                            <span className="flip-hint">
-                              <RotateCw size={13} />
-                              <span>Flip back</span>
-                            </span>
+                        }
+                        back={
+                          <div className="flip-face-inner flip-face-inner--back">
+                            <div className="project-card__top">
+                              <span className="gold-pill">Highlights</span>
+                              <span className="flip-hint">
+                                <RotateCw size={13} />
+                                <span>Flip back</span>
+                              </span>
+                            </div>
+                            <h4 className="project-back-title">{project.title}</h4>
+                            <ul className="project-highlights">
+                              {project.highlights.map((bullet, bIdx) => (
+                                <li key={bIdx}>{bullet}</li>
+                              ))}
+                            </ul>
                           </div>
-                          <h4 className="project-back-title">{project.title}</h4>
-                          <ul className="project-highlights">
-                            {project.highlights.map((bullet, bIdx) => (
-                              <li key={bIdx}>{bullet}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      }
-                    />
+                        }
+                      />
+                    </Suspense>
                   </div>
 
                   {project.liveDemo && (
@@ -641,46 +647,48 @@ export default function App() {
                   className="achievement-flip-wrap cursor-target"
                   data-cursor-label="Flip Card"
                 >
-                  <FlipCard
-                    width={480}
-                    height={230}
-                    radius={20}
-                    background="#0c0c10"
-                    color="#f5f5f5"
-                    tilt
-                    tiltMax={9}
-                    glare
-                    glareOpacity={0.18}
-                    hoverScale={1.02}
-                    ariaLabel={item.title}
-                    front={
-                      <div className="flip-face-inner flip-face-inner--achievement">
-                        <div className="project-card__top">
-                          <span className="gold-pill">
-                            <Award size={13} />
-                            <span>{item.tag}</span>
-                          </span>
-                          <span className="flip-hint">
-                            <RotateCw size={13} />
-                            <span>Flip</span>
-                          </span>
+                  <Suspense fallback={<div style={{ width: '100%', height: 230 }} />}>
+                    <FlipCard
+                      width={480}
+                      height={230}
+                      radius={20}
+                      background="#0c0c10"
+                      color="#f5f5f5"
+                      tilt
+                      tiltMax={9}
+                      glare
+                      glareOpacity={0.18}
+                      hoverScale={1.02}
+                      ariaLabel={item.title}
+                      front={
+                        <div className="flip-face-inner flip-face-inner--achievement">
+                          <div className="project-card__top">
+                            <span className="gold-pill">
+                              <Award size={13} />
+                              <span>{item.tag}</span>
+                            </span>
+                            <span className="flip-hint">
+                              <RotateCw size={13} />
+                              <span>Flip</span>
+                            </span>
+                          </div>
+                          <div>
+                            <h3 className="achievement-title">{item.title}</h3>
+                            <p className="achievement-org">
+                              {item.organization}
+                              {item.date ? ` · ${item.date}` : ''}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="achievement-title">{item.title}</h3>
-                          <p className="achievement-org">
-                            {item.organization}
-                            {item.date ? ` · ${item.date}` : ''}
-                          </p>
+                      }
+                      back={
+                        <div className="flip-face-inner flip-face-inner--achievement-back">
+                          <span className="gold-pill">Details</span>
+                          <p className="card-body">{item.description}</p>
                         </div>
-                      </div>
-                    }
-                    back={
-                      <div className="flip-face-inner flip-face-inner--achievement-back">
-                        <span className="gold-pill">Details</span>
-                        <p className="card-body">{item.description}</p>
-                      </div>
-                    }
-                  />
+                      }
+                    />
+                  </Suspense>
                 </AnimatedContent>
               ))}
             </div>
@@ -704,28 +712,29 @@ export default function App() {
             <AnimatedContent distance={50} duration={0.9} delay={0.1}>
               <div className="carousel-stage glass-card">
                 <div className="carousel-frame cursor-target" data-cursor-label="Drag / Click">
-                  <DepthCarousel
-                    items={CERTIFICATES}
-                    cardWidth={380}
-                    cardHeight={280}
-                    radius={18}
-                    tint="#07070a"
-                    depth={220}
-                    spread={90}
-                    tilt={20}
-                    tiltDirection="right"
-                    perspective={1400}
-                    visibleCards={4}
-                    falloff={0.2}
-                    blur={5}
-                    autoplay
-                    autoplayDelay={3200}
-                    loop
-                    onChange={(idx) => setCertIndex(idx)}
-                  />
+                  <Suspense fallback={<div style={{ width: '100%', height: 280 }} />}>
+                    <DepthCarousel
+                      items={CERTIFICATES}
+                      cardWidth={380}
+                      cardHeight={280}
+                      radius={18}
+                      tint="#07070a"
+                      depth={220}
+                      spread={90}
+                      tilt={20}
+                      tiltDirection="right"
+                      perspective={1400}
+                      visibleCards={4}
+                      falloff={0.2}
+                      blur={5}
+                      autoplay
+                      autoplayDelay={3200}
+                      loop
+                    />
+                  </Suspense>
                 </div>
                 <div className="carousel-counter">
-                  Certificate {certIndex + 1} of {CERTIFICATES.length}
+                  Certifications
                 </div>
               </div>
             </AnimatedContent>

@@ -36,14 +36,24 @@ export default function ScrollBackground({ onReady }) {
       }
     };
 
+    const scheduleAnimate = () => {
+      if (!rafId && !disposed) {
+        rafId = requestAnimationFrame(animate);
+      }
+    };
+
     const calculateTargetFrame = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       const progress = maxScroll > 0 ? Math.min(Math.max(scrollTop / maxScroll, 0), 1) : 0;
       targetFrame = 1 + progress * (TOTAL_FRAMES - 1);
+      if (Math.abs(targetFrame - currentFrame) > 0.005) {
+        scheduleAnimate();
+      }
     };
 
     const animate = () => {
+      rafId = 0;
       if (disposed) return;
       const ease = 0.14;
       const diff = targetFrame - currentFrame;
@@ -51,8 +61,10 @@ export default function ScrollBackground({ onReady }) {
       if (Math.abs(diff) > 0.005) {
         currentFrame += diff * ease;
         drawFrame(currentFrame);
+        rafId = requestAnimationFrame(animate);
+      } else {
+        currentFrame = targetFrame;
       }
-      rafId = requestAnimationFrame(animate);
     };
 
     // Load frame 1 immediately for instant initial paint & LCP
@@ -68,7 +80,7 @@ export default function ScrollBackground({ onReady }) {
     };
     images[0] = firstImg;
 
-    // Preload remaining frames after initial load settles (2.5s) or immediately on first user scroll/touch
+    // Preload remaining frames after initial load settles (8s) or immediately on first user scroll/touch
     let nextFrame = 2;
     let preloadStarted = false;
     const startPreload = () => {
@@ -76,7 +88,7 @@ export default function ScrollBackground({ onReady }) {
       preloadStarted = true;
       const loadBatch = () => {
         if (disposed || nextFrame > TOTAL_FRAMES) return;
-        const end = Math.min(nextFrame + 11, TOTAL_FRAMES);
+        const end = Math.min(nextFrame + 5, TOTAL_FRAMES);
         for (let i = nextFrame; i <= end; i++) {
           const img = new Image();
           img.decoding = 'async';
@@ -85,13 +97,13 @@ export default function ScrollBackground({ onReady }) {
         }
         nextFrame = end + 1;
         if (nextFrame <= TOTAL_FRAMES) {
-          setTimeout(loadBatch, 60);
+          setTimeout(loadBatch, 80);
         }
       };
       loadBatch();
     };
 
-    const batchTimer = setTimeout(startPreload, 2500);
+    const batchTimer = setTimeout(startPreload, 8000);
     window.addEventListener('scroll', startPreload, { once: true, passive: true });
     window.addEventListener('touchstart', startPreload, { once: true, passive: true });
     window.addEventListener('wheel', startPreload, { once: true, passive: true });
@@ -99,7 +111,6 @@ export default function ScrollBackground({ onReady }) {
     calculateTargetFrame();
     window.addEventListener('scroll', calculateTargetFrame, { passive: true });
     window.addEventListener('resize', calculateTargetFrame, { passive: true });
-    rafId = requestAnimationFrame(animate);
 
     // Fallback in case frame 1 takes longer or is cached synchronously
     const fallbackTimer = setTimeout(() => {
@@ -107,7 +118,7 @@ export default function ScrollBackground({ onReady }) {
         firstFrameDrawn = true;
         onReady?.();
       }
-    }, 900);
+    }, 300);
 
     return () => {
       disposed = true;
