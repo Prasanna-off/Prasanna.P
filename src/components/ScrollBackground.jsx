@@ -68,9 +68,12 @@ export default function ScrollBackground({ onReady }) {
     };
     images[0] = firstImg;
 
-    // Preload remaining frames in gentle batches after initial paint to keep TBT low
+    // Preload remaining frames after initial load settles (2.5s) or immediately on first user scroll/touch
     let nextFrame = 2;
-    const batchTimer = setTimeout(() => {
+    let preloadStarted = false;
+    const startPreload = () => {
+      if (preloadStarted || disposed) return;
+      preloadStarted = true;
       const loadBatch = () => {
         if (disposed || nextFrame > TOTAL_FRAMES) return;
         const end = Math.min(nextFrame + 11, TOTAL_FRAMES);
@@ -86,7 +89,12 @@ export default function ScrollBackground({ onReady }) {
         }
       };
       loadBatch();
-    }, 350);
+    };
+
+    const batchTimer = setTimeout(startPreload, 2500);
+    window.addEventListener('scroll', startPreload, { once: true, passive: true });
+    window.addEventListener('touchstart', startPreload, { once: true, passive: true });
+    window.addEventListener('wheel', startPreload, { once: true, passive: true });
 
     calculateTargetFrame();
     window.addEventListener('scroll', calculateTargetFrame, { passive: true });
@@ -108,6 +116,9 @@ export default function ScrollBackground({ onReady }) {
       clearTimeout(fallbackTimer);
       window.removeEventListener('scroll', calculateTargetFrame);
       window.removeEventListener('resize', calculateTargetFrame);
+      window.removeEventListener('scroll', startPreload);
+      window.removeEventListener('touchstart', startPreload);
+      window.removeEventListener('wheel', startPreload);
     };
   }, [onReady]);
 

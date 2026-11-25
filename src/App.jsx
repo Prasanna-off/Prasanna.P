@@ -190,7 +190,12 @@ export default function App() {
       setFormData({ name: '', email: '', message: '' });
     } catch (err) {
       console.error('EmailJS error:', err);
-      setFormError('Failed to send message. Please try again or email directly.');
+      const detail = err?.text || err?.message;
+      setFormError(
+        detail
+          ? `Failed to send message (${detail}). Please try again or email directly.`
+          : 'Failed to send message. Please try again or email directly.'
+      );
     } finally {
       setSending(false);
     }
