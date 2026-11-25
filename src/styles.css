@@ -254,6 +254,7 @@ body {
 .section {
   position: relative;
   padding: 110px 24px;
+  overflow-x: hidden;
 }
 
 .container {
@@ -412,7 +413,7 @@ body {
 
 .hero-title__name {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(2.8rem, 7vw, 4.8rem);
+  font-size: clamp(2rem, 7vw, 4.8rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.05;
@@ -637,11 +638,12 @@ body {
   padding: 28px 18px;
   margin-bottom: 28px;
   border-color: var(--border-gold);
+  overflow: hidden;
 }
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
   gap: 20px;
 }
 
@@ -829,6 +831,7 @@ body {
 .carousel-stage {
   padding: 28px 20px 22px;
   border-color: var(--border-gold);
+  overflow: hidden;
 }
 
 .carousel-frame {
@@ -1005,14 +1008,10 @@ a.contact-item:hover {
   .site-header {
     padding: 12px 16px;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
   }
 
   .brand-mark {
-    display: none;
-  }
-
-  .site-header__cta {
     display: none;
   }
 
@@ -1024,13 +1023,28 @@ a.contact-item:hover {
   }
 }
 
+@media (max-width: 767px) {
+  .site-header {
+    justify-content: center;
+  }
+
+  .site-header__cta {
+    display: none;
+  }
+}
+
 @media (max-width: 600px) {
   .section {
     padding: 84px 16px;
   }
 
+  .hero-section {
+    padding-top: 100px;
+    padding-bottom: 64px;
+  }
+
   .hero-stage {
-    padding: 32px 20px;
+    padding: 28px 18px;
   }
 
   .glass-card {
@@ -1041,19 +1055,33 @@ a.contact-item:hover {
     padding: 18px;
   }
 
+  .flip-face-inner--front {
+    overflow-y: auto;
+  }
+
   .project-card__title {
     font-size: 1.35rem;
   }
 
   .project-flip-wrap .flip-card {
-    height: 450px;
+    height: 460px;
+  }
+
+  .achievement-flip-wrap .flip-card {
+    height: 260px;
   }
 
   .carousel-frame {
-    height: 320px;
+    height: 300px;
+  }
+
+  .form-field input,
+  .form-field textarea {
+    font-size: 1rem;
   }
 
   .floating-3d-orb--1,
+  .floating-3d-orb--2,
   .floating-3d-ring {
     display: none;
   }
@@ -1063,8 +1091,12 @@ a.contact-item:hover {
   .gooey-nav--sm {
     --gn-pad: 4px;
     --gn-gap: 1px;
-    --gn-font: 11.5px;
-    --gn-x: 9px;
+    --gn-font: 11px;
+    --gn-x: 8px;
     --gn-y: 6px;
+  }
+
+  .carousel-frame {
+    height: 270px;
   }
 }
