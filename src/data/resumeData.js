@@ -117,19 +117,19 @@ export const LANGUAGES = [
 ];
 
 export const CERTIFICATES = [
-  { image: '/Certificates/c1.jpg', alt: 'Certificate 1' },
-  { image: '/Certificates/c2.jpg', alt: 'Certificate 2' },
-  { image: '/Certificates/c3.jpg', alt: 'Certificate 3' },
-  { image: '/Certificates/c4.jpg', alt: 'Certificate 4' },
-  { image: '/Certificates/c5.jpg', alt: 'Certificate 5' },
-  { image: '/Certificates/c6.jpg', alt: 'Certificate 6' },
-  { image: '/Certificates/c7.jpg', alt: 'Certificate 7' },
-  { image: '/Certificates/c8.jpg', alt: 'Certificate 8' },
-  { image: '/Certificates/c9.jpg', alt: 'Certificate 9' },
-  { image: '/Certificates/c10.jpg', alt: 'Certificate 10' },
-  { image: '/Certificates/c11.jpg', alt: 'Certificate 11' },
-  { image: '/Certificates/c12.jpg', alt: 'Certificate 12' },
-  { image: '/Certificates/c13.jpg', alt: 'Certificate 13' },
-  { image: '/Certificates/c14.jpg', alt: 'Certificate 14' },
-  { image: '/Certificates/c15.png', alt: 'Certificate 15' }
+  { image: '/Certificates/c1.jpg', alt: 'Prasanna P — Certificate 1' },
+  { image: '/Certificates/c2.jpg', alt: 'Prasanna P — Certificate 2' },
+  { image: '/Certificates/c3.jpg', alt: 'Prasanna P — Certificate 3' },
+  { image: '/Certificates/c4.jpg', alt: 'Prasanna P — Certificate 4' },
+  { image: '/Certificates/c5.jpg', alt: 'Prasanna P — Certificate 5' },
+  { image: '/Certificates/c6.jpg', alt: 'Prasanna P — Certificate 6' },
+  { image: '/Certificates/c7.jpg', alt: 'Prasanna P — Certificate 7' },
+  { image: '/Certificates/c8.jpg', alt: 'Prasanna P — Certificate 8' },
+  { image: '/Certificates/c9.jpg', alt: 'Prasanna P — Certificate 9' },
+  { image: '/Certificates/c10.jpg', alt: 'Prasanna P — Certificate 10' },
+  { image: '/Certificates/c11.jpg', alt: 'Prasanna P — Certificate 11' },
+  { image: '/Certificates/c12.jpg', alt: 'Prasanna P — Certificate 12' },
+  { image: '/Certificates/c13.jpg', alt: 'Prasanna P — Certificate 13' },
+  { image: '/Certificates/c14.jpg', alt: 'Prasanna P — Certificate 14' },
+  { image: '/Certificates/c15.png', alt: 'Prasanna P — Certificate 15' }
 ];

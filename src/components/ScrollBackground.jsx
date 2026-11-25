@@ -55,19 +55,38 @@ export default function ScrollBackground({ onReady }) {
       rafId = requestAnimationFrame(animate);
     };
 
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
-      const img = new Image();
-      img.src = getFrameUrl(i);
-      img.onload = () => {
-        if (disposed) return;
-        if (i === 1 && !firstFrameDrawn) {
-          firstFrameDrawn = true;
-          drawFrame(1);
-          onReady?.();
+    // Load frame 1 immediately for instant initial paint & LCP
+    const firstImg = new Image();
+    firstImg.src = getFrameUrl(1);
+    firstImg.onload = () => {
+      if (disposed) return;
+      if (!firstFrameDrawn) {
+        firstFrameDrawn = true;
+        drawFrame(1);
+        onReady?.();
+      }
+    };
+    images[0] = firstImg;
+
+    // Preload remaining frames in gentle batches after initial paint to keep TBT low
+    let nextFrame = 2;
+    const batchTimer = setTimeout(() => {
+      const loadBatch = () => {
+        if (disposed || nextFrame > TOTAL_FRAMES) return;
+        const end = Math.min(nextFrame + 11, TOTAL_FRAMES);
+        for (let i = nextFrame; i <= end; i++) {
+          const img = new Image();
+          img.decoding = 'async';
+          img.src = getFrameUrl(i);
+          images[i - 1] = img;
+        }
+        nextFrame = end + 1;
+        if (nextFrame <= TOTAL_FRAMES) {
+          setTimeout(loadBatch, 60);
         }
       };
-      images[i - 1] = img;
-    }
+      loadBatch();
+    }, 350);
 
     calculateTargetFrame();
     window.addEventListener('scroll', calculateTargetFrame, { passive: true });
@@ -85,6 +104,7 @@ export default function ScrollBackground({ onReady }) {
     return () => {
       disposed = true;
       cancelAnimationFrame(rafId);
+      clearTimeout(batchTimer);
       clearTimeout(fallbackTimer);
       window.removeEventListener('scroll', calculateTargetFrame);
       window.removeEventListener('resize', calculateTargetFrame);
