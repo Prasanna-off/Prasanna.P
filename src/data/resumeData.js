@@ -43,7 +43,6 @@ export const PROJECTS = [
     id: 'vd-logs',
     title: 'VD Logs',
     subtitle: 'Staff Attendance & Work Management Platform',
-    liveDemo: 'https://vd-logs.vercel.app',
     tagline: 'Full-stack attendance, task assignment, approval workflows, and analytics platform for Vishvadaan Educational and Charitable Trust.',
     highlights: [
       'Developed and deployed a full-stack staff attendance and work management platform for Vishvadaan Educational and Charitable Trust.',

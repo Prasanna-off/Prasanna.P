@@ -581,32 +581,34 @@ export default function App() {
                     />
                   </div>
 
-                  <div className="project-actions">
-                    <a
-                      href={project.liveDemo}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="project-link-anchor cursor-target"
-                      data-cursor-label="Open Live Site"
-                    >
-                      <SpecularButton
-                        size="md"
-                        radius={14}
-                        tint="#d4af37"
-                        tintOpacity={0.14}
-                        blur={10}
-                        textColor="#ffffff"
-                        lineColor="#f3d27a"
-                        baseColor="#6b4f12"
-                        intensity={1.1}
-                        idleIntensity={0.4}
+                  {project.liveDemo && (
+                    <div className="project-actions">
+                      <a
+                        href={project.liveDemo}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="project-link-anchor cursor-target"
+                        data-cursor-label="Open Live Site"
                       >
-                        <span>Live Demo</span>
-                        <ExternalLink size={16} />
-                      </SpecularButton>
-                    </a>
-                    <span className="project-url-text">{project.liveDemo.replace('https://', '')}</span>
-                  </div>
+                        <SpecularButton
+                          size="md"
+                          radius={14}
+                          tint="#d4af37"
+                          tintOpacity={0.14}
+                          blur={10}
+                          textColor="#ffffff"
+                          lineColor="#f3d27a"
+                          baseColor="#6b4f12"
+                          intensity={1.1}
+                          idleIntensity={0.4}
+                        >
+                          <span>Live Demo</span>
+                          <ExternalLink size={16} />
+                        </SpecularButton>
+                      </a>
+                      <span className="project-url-text">{project.liveDemo.replace('https://', '')}</span>
+                    </div>
+                  )}
                 </AnimatedContent>
               ))}
             </div>

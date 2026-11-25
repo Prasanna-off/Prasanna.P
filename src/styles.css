@@ -26,12 +26,20 @@ html {
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   min-height: 100vh;
   background-color: var(--bg-obsidian);
   overflow-x: hidden;
+  max-width: 100%;
+}
+
+.portfolio-root {
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* =========================================
@@ -697,11 +705,14 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 18px;
+  min-width: 0;
+  width: 100%;
 }
 
 .project-flip-wrap,
 .achievement-flip-wrap {
   width: 100%;
+  min-width: 0;
   display: flex;
   justify-content: center;
 }
@@ -1063,16 +1074,26 @@ a.contact-item:hover {
     font-size: 1.35rem;
   }
 
+  .project-flip-wrap .flip-card,
+  .achievement-flip-wrap .flip-card {
+    width: 100% !important;
+    max-width: 100%;
+  }
+
   .project-flip-wrap .flip-card {
-    height: 460px;
+    height: 460px !important;
   }
 
   .achievement-flip-wrap .flip-card {
-    height: 260px;
+    height: 260px !important;
+  }
+
+  .carousel-stage {
+    padding: 18px 10px 16px;
   }
 
   .carousel-frame {
-    height: 300px;
+    height: 340px;
   }
 
   .form-field input,
@@ -1097,6 +1118,6 @@ a.contact-item:hover {
   }
 
   .carousel-frame {
-    height: 270px;
+    height: 330px;
   }
 }
